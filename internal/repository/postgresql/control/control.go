@@ -22,9 +22,10 @@ func (r Repository) AddControl(ctx context.Context, data control.Create) (entity
 	var addControl entity.Control
 	var existStudent []entity.Control
 
+	date := time.Now().Format("2006-01-02 15:04")
 	addControl.StudentId = data.StudentId
 	addControl.Status = data.Status
-	addControl.Time = time.Now()
+	addControl.Time = date
 
 	errNew := r.NewSelect().Model(&existStudent).Where("student_id = ?", data.StudentId).Scan(ctx)
 	if errNew != nil {
@@ -51,9 +52,12 @@ func (r Repository) GetAllControls(ctx context.Context, filter student.Filter) (
 	query := r.NewSelect().Model(&controls).Column("*")
 
 	if filter.StudentId != nil {
-		query.Where("student_id = ?", *filter.StudentId)
-	}
+		today := time.Now().Format("2006-01-02")
 
+		query.WhereGroup("AND", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Where("student_id = ?", *filter.StudentId).Where("time LIKE ?", "%"+today+"%")
+		})
+	}
 	count, err := query.ScanAndCount(ctx)
 	if err != nil {
 		return nil, 0, err
