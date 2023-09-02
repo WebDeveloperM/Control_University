@@ -7,4 +7,5 @@ type Student struct {
 	Id            int    `bun:"id,pk,autoincrement"`
 	FirstName     string `bun:"firstname"`
 	LastName      string `bun:"lastname"`
+	UserId        int    `bun:"user_id"`
 }

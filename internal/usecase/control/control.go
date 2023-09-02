@@ -8,6 +8,8 @@ import (
 
 type UseCase struct {
 	control Control
+	student Student
+	user    User
 }
 
 func ControlUseCase(control Control) UseCase {

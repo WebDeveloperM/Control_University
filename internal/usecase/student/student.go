@@ -4,15 +4,17 @@ import (
 	"context"
 	"controlUniversity/internal/entity"
 	"controlUniversity/internal/service/student"
+	"fmt"
 )
 
 type UseCase struct {
 	student  Student
-	controls Controls
+	controls Control
+	user     User
 }
 
-func StudentUseCase(student Student, controls Controls) UseCase {
-	return UseCase{student, controls}
+func StudentUseCase(student Student, control Control, user User) UseCase {
+	return UseCase{student, control, user}
 }
 
 func (c UseCase) AddStudent(ctx context.Context, data student.Create) (entity.Student, error) {
@@ -34,5 +36,12 @@ func (c UseCase) GetDetail(ctx context.Context, id int) (student.Detail, error) 
 		return student.Detail{}, errControls
 	}
 	detail.Controls = controls
+
+	user, errUser := c.user.GetOneUser(ctx, studentDetail.UserId)
+	if errUser != nil {
+		return student.Detail{}, errUser
+	}
+	fmt.Printf("%T\n", user)
+	//detail.UserId = user
 	return detail, nil
 }

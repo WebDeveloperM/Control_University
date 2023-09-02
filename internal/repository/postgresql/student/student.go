@@ -21,6 +21,7 @@ func (r Repository) AddStudent(ctx context.Context, data student.Create) (entity
 
 	newStudent.FirstName = data.FirstName
 	newStudent.LastName = data.LastName
+	newStudent.UserId = data.UserId
 
 	_, err := r.NewInsert().Model(&newStudent).Exec(ctx)
 	if err != nil {

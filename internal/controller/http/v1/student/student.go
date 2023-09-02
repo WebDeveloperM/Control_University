@@ -4,6 +4,7 @@ import (
 	"context"
 	student2 "controlUniversity/internal/service/student"
 	"controlUniversity/internal/usecase/student"
+	token2 "controlUniversity/internal/utils/token"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -29,7 +30,17 @@ func (ct Controller) AddStudent(c *gin.Context) {
 		})
 		return
 	}
+	id, errTk := token2.ExtractTokenID(c)
 
+	if errTk != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": errTk.Error(),
+			"data":    "",
+			"err":     "errr",
+		})
+		return
+	}
+	addStudent.UserId = int(id)
 	_, err := ct.student.AddStudent(ctx, addStudent)
 
 	if err != nil {

@@ -6,6 +6,7 @@ import (
 	"controlUniversity/internal/service/control"
 	"controlUniversity/internal/service/student"
 	"errors"
+	"fmt"
 	"github.com/uptrace/bun"
 	"time"
 )
@@ -26,6 +27,7 @@ func (r Repository) AddControl(ctx context.Context, data control.Create) (entity
 	addControl.StudentId = data.StudentId
 	addControl.Status = data.Status
 	addControl.Time = date
+	addControl.UserId = data.UserId
 
 	errNew := r.NewSelect().Model(&existStudent).Where("student_id = ?", data.StudentId).Scan(ctx)
 	if errNew != nil {
@@ -41,7 +43,9 @@ func (r Repository) AddControl(ctx context.Context, data control.Create) (entity
 	_, err := r.NewInsert().Model(&addControl).Exec(ctx)
 
 	if err != nil {
-		return entity.Control{}, errors.New("Bunday id bo`yicha bizda talaba mavjud emas")
+		fmt.Println(err)
+		return entity.Control{}, err
+		//return entity.Control{}, errors.New("Bunday id bo`yicha bizda talaba mavjud emas")
 	}
 	return addControl, nil
 
@@ -61,6 +65,15 @@ func (r Repository) GetAllControls(ctx context.Context, filter student.Filter) (
 	count, err := query.ScanAndCount(ctx)
 	if err != nil {
 		return nil, 0, err
+	}
+
+	for i := 0; i < len(controls); i++ {
+		format := "2006-01-02 15:04"
+		t, err := time.Parse(format, controls[i].Time)
+		if err != nil {
+			fmt.Println("Error parsing time:", err)
+		}
+		controls[i].Time = t.Format("01-02-2006 15:04")
 	}
 
 	return controls, count, nil

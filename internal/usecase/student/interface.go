@@ -11,6 +11,10 @@ type Student interface {
 	GetDetailStudent(ctx context.Context, id int) (entity.Student, error)
 }
 
-type Controls interface {
+type Control interface {
 	GetAll(ctx context.Context, filter student.Filter) ([]entity.Control, int, error)
+}
+
+type User interface {
+	GetOneUser(ctx context.Context, id int) (entity.User, error)
 }

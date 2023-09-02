@@ -4,10 +4,9 @@ import (
 	"context"
 	control2 "controlUniversity/internal/service/control"
 	"controlUniversity/internal/usecase/control"
-	"fmt"
+	"controlUniversity/internal/utils/token"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
 )
 
 type Controller struct {
@@ -20,7 +19,7 @@ func ControllerControl(control control.UseCase) Controller {
 
 func (ct Controller) CreateControl(c *gin.Context) {
 	ctx := context.Background()
-	fmt.Println(os.Getenv("DBNAME"))
+
 	var createControl control2.Create
 
 	errBind := c.ShouldBind(&createControl)
@@ -30,6 +29,18 @@ func (ct Controller) CreateControl(c *gin.Context) {
 		})
 		return
 	}
+
+	id, errTk := token.ExtractTokenID(c)
+
+	if errTk != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": errTk.Error(),
+			"status":  false,
+			"data":    "",
+		})
+		return
+	}
+	createControl.UserId = int(id)
 
 	_, err := ct.control.AddControl(ctx, createControl)
 	if err != nil {

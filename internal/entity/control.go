@@ -10,4 +10,5 @@ type Control struct {
 	StudentId      int    `bun:"student_id"`
 	Time           string `bun:"time"`
 	Status         int    `bun:"status"`
+	UserId         int    `bun:"user_id"`
 }

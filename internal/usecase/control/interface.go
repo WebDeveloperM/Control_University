@@ -9,3 +9,8 @@ import (
 type Control interface {
 	AddControl(ctx context.Context, data control.Create) (entity.Control, error)
 }
+
+type Student struct {
+}
+type User struct {
+}
