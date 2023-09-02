@@ -37,23 +37,6 @@ func TokenValid(c *gin.Context) error {
 	return nil
 }
 
-//func TokenValid(c *gin.Context) error {
-//	tokenString := ExtractToken(c)
-//	data, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-//		_, errToken := token.Method.(*jwt.SigningMethodHMAC)
-//		if !errToken {
-//			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-//		}
-//
-//		return []byte("control"), nil
-//	})
-//	fmt.Println(data, "333333333333333333333")
-//	if err != nil {
-//		return err
-//	}
-//	return nil
-//}
-
 func ExtractToken(c *gin.Context) string {
 	token := c.Query("token")
 
@@ -82,7 +65,7 @@ func ExtractTokenID(c *gin.Context) (int64, error) {
 		return 0, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
-	fmt.Println(claims, "8888888888888888888888 \n")
+
 	if ok && token.Valid {
 		id, err := strconv.ParseInt(fmt.Sprintf("%.0f", claims["id"]), 10, 32)
 		if err != nil {
@@ -107,7 +90,6 @@ func ExtractTokenRole(c *gin.Context) (string, error) {
 		return "", err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
-	fmt.Println(claims, "22222222222222222222 \n")
 
 	if ok && token.Valid {
 		role, _ := claims["role"].(string)

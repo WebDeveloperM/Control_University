@@ -35,8 +35,7 @@ func (ct Controller) AddStudent(c *gin.Context) {
 	if errTk != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"message": errTk.Error(),
-			"data":    "",
-			"err":     "errr",
+			"token":   "",
 		})
 		return
 	}

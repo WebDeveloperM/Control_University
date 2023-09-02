@@ -45,7 +45,6 @@ func (r Repository) AddControl(ctx context.Context, data control.Create) (entity
 	if err != nil {
 		fmt.Println(err)
 		return entity.Control{}, err
-		//return entity.Control{}, errors.New("Bunday id bo`yicha bizda talaba mavjud emas")
 	}
 	return addControl, nil
 

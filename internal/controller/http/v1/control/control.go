@@ -35,7 +35,6 @@ func (ct Controller) CreateControl(c *gin.Context) {
 	if errTk != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"message": errTk.Error(),
-			"status":  false,
 			"data":    "",
 		})
 		return

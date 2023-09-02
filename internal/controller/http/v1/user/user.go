@@ -38,7 +38,7 @@ func (ct Controller) Register(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message": false,
-		"data":    token,
+		"token":   token,
 	})
 
 }

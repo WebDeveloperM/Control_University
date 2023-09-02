@@ -6,7 +6,6 @@ import (
 	"controlUniversity/internal/service/user"
 	token2 "controlUniversity/internal/utils/token"
 	"errors"
-	"fmt"
 	"github.com/uptrace/bun"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -45,7 +44,6 @@ func (r Repository) CreateUser(ctx context.Context, data user.Create) (string, e
 func (r Repository) GetOneUser(ctx context.Context, id int) (entity.User, error) {
 	var oneUser entity.User
 	err := r.NewSelect().Model(&oneUser).Where("id = ?", id).Scan(ctx)
-	fmt.Println(err, oneUser, "000000000000000000000000000000")
 	if err != nil {
 		return entity.User{}, err
 	}
