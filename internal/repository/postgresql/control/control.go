@@ -34,9 +34,9 @@ func (r Repository) AddControl(ctx context.Context, data control.Create) (entity
 		return entity.Control{}, errNew
 	}
 	if len(existStudent) > 0 {
-		if existStudent[len(existStudent)-1].Status == data.Status && data.Status == 1 {
+		if existStudent[len(existStudent)-1].Status == data.Status && data.Status == "input" {
 			return entity.Control{}, errors.New("Siz allaqachon ichkaridasiz")
-		} else if existStudent[len(existStudent)-1].Status == data.Status && data.Status == 0 {
+		} else if existStudent[len(existStudent)-1].Status == data.Status && data.Status == "output" {
 			return entity.Control{}, errors.New("Siz allaqachon chiqib bo`lgansiz")
 		}
 	}
