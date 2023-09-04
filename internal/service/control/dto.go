@@ -5,3 +5,8 @@ type Create struct {
 	Status    string `json:"status"`
 	UserId    int    `json:"user_id"`
 }
+
+type Update struct {
+	Status string `json:"status"`
+	Time   string `json:"time"`
+}

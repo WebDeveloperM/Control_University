@@ -22,23 +22,6 @@ func CreateRouter(user user.Controller, student student.Controller, control cont
 	return Router{user: user, student: student, control: control}
 }
 
-//func Middleware(role string) gin.HandlerFunc {
-//	return func(c *gin.Context) {
-//
-//		t := time.Now()
-//		roleIncome, errRole := token2.ExtractTokenRole(c)
-//		if role != roleIncome || errRole != nil {
-//			log.Println(errRole, "err")
-//			c.String(http.StatusUnauthorized, "Siz bu ishni qilolmaysiz to`g`ojon.")
-//			c.Abort()
-//			return
-//		}
-//		c.Next()
-//		log.Println(time.Since(t))
-//
-//	}
-//}
-
 func Middleware(roleArr []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
@@ -56,10 +39,35 @@ func Middleware(roleArr []string) gin.HandlerFunc {
 
 		if !data || errRole != nil {
 			log.Println(errRole, "err")
-			c.String(http.StatusUnauthorized, "Siz bu ishni qilolmaysiz tog'ojon.")
+			c.String(http.StatusUnauthorized, "You can`t do this!!!")
 			c.Abort()
 			return
 
+			c.Next()
+			log.Println(time.Since(t))
+		}
+
+	}
+}
+
+func MiddlewareForDeleteOrUpdate(roleArr []string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		t := time.Now()
+		roleOutcome, errRole := token2.ExtractTokenRole(c)
+		user_id, _ := token2.ExtractTokenID(c)
+		var data bool
+		if roleOutcome == "superuser" || roleOutcome == "admin" {
+			data = true
+		}
+
+		if data {
+			if errRole != nil {
+				log.Println(errRole, "err")
+				c.String(http.StatusUnauthorized, "You can't do this!!!")
+				c.Abort()
+				return
+			}
+			c.Set("userID", user_id)
 			c.Next()
 			log.Println(time.Since(t))
 		}
@@ -85,6 +93,8 @@ func (r Router) StudentRouter(engine *gin.Engine) {
 func (r Router) ControlRouter(engine *gin.Engine) {
 	controls := engine.Group("/controls")
 	{
-		controls.POST("/", Middleware([]string{"Teacher"}), r.control.CreateControl) // Teacher
+		controls.POST("/", Middleware([]string{"Teacher"}), r.control.CreateControl)                                      // Teacher
+		controls.PUT("/delete/:id", MiddlewareForDeleteOrUpdate([]string{"Superuser", "Admin"}), r.control.DeleteControl) // Only Superuser or Admin
+		controls.PUT("/update/:id", MiddlewareForDeleteOrUpdate([]string{"Superuser", "Admin"}), r.control.UpdateControl) // Only Superuser or Admin
 	}
 }

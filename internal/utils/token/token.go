@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	lifespan = 24
+	lifespan = 100
 )
 
 func Generate(id int, role string) (string, error) {
@@ -64,8 +64,19 @@ func ExtractTokenID(c *gin.Context) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
 
+	//token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	//	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+	//		return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+	//	}
+	//	return []byte("control"), nil
+	//})
+	//if err != nil {
+	//	fmt.Println(err, "eeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrr")
+	//	return 0, err
+	//}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	fmt.Println(claims, "ccccccccccccllllllllllllllllllllaaaaaaaaaaaaaa")
 	if ok && token.Valid {
 		id, err := strconv.ParseInt(fmt.Sprintf("%.0f", claims["id"]), 10, 32)
 		if err != nil {

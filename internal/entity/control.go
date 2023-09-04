@@ -11,4 +11,5 @@ type Control struct {
 	Time           string `bun:"time"`
 	Status         string `bun:"status"`
 	UserId         int    `bun:"user_id"`
+	IsDelete       bool   `bun:"is_delete"`
 }
